@@ -10,6 +10,8 @@ public class LongStack {
          this.value = value;
          this.next = null;
       }
+
+
    }
 
    public static void main(String[] argum) {
