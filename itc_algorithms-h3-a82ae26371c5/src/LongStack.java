@@ -5,6 +5,7 @@ public class LongStack {
    private class Node {
       long value;
       Node next;
+      Node prev;
 
       Node(long value) {
          this.value = value;
@@ -13,6 +14,10 @@ public class LongStack {
 
 
    }
+   int size;
+   public int size(){
+      return size;
+   }
 
    public static void main(String[] argum) {
       // TODO!!! Your tests here!
@@ -20,6 +25,7 @@ public class LongStack {
 
    LongStack() {
       head = null;
+      size=0;
    }
 
    LongStack(LongStack other) {
@@ -52,6 +58,7 @@ public class LongStack {
       Node newNode = new Node(a);
       newNode.next = head;
       head = newNode;
+      size++;
    }
 
    public long pop() {
@@ -60,6 +67,7 @@ public class LongStack {
       }
       long result = head.value;
       head = head.next;
+      size--;
       return result;
    } // pop remove
 
@@ -123,6 +131,24 @@ public class LongStack {
       return sb.toString().trim();
    }
 
+
+
+   public void swap (){
+      if (head == null || head.prev == null){
+         throw new RuntimeException("Not enough elements in the stack");
+      }
+      long temp = head.value;
+      head.value = head.prev.value;
+      head.prev.value = temp;
+   }
+
+   public void dup (){
+      if (head == null){
+         throw new RuntimeException("Not enough elements in the stack");
+      }
+      push(head.value);
+   }
+
    public static long interpret(String pol) {
       if (pol == null || pol.trim().isEmpty()) {
          throw new RuntimeException("No expression");
@@ -143,6 +169,33 @@ public class LongStack {
                   throw new RuntimeException("Error processing operator " + token + " in expression: " + pol, e);
                }
                break;
+            case "SWAP":
+               if (stack.size < 2){
+                  throw new RuntimeException("Not enough elements to perform SWAP" + pol);
+               }
+               long op2 = stack.pop();
+               long op1 = stack.pop();
+               stack.push(op2);
+               stack.push(op1);
+               break;
+            case "ROT":
+                  if (stack.size() < 3) {
+                     throw new RuntimeException("Not enough elements to perform ROT" + pol);
+                  }
+                  long top = stack.pop();
+                  long mid = stack.pop();
+                  long bot = stack.pop();
+                  stack.push(mid);
+                  stack.push(top);
+                  stack.push(bot);
+               break;
+            case "DUP":
+               try{
+                  stack.dup();
+               } catch (RuntimeException e){
+                  throw new RuntimeException("Error processing DUP operation" + pol);
+               }
+               break;
             default:
                try {
                   long value = Long.parseLong(token);
@@ -152,7 +205,15 @@ public class LongStack {
                }
                break;
          }
-         if (stack.head == null && !token.equals("+") && !token.equals("-") && !token.equals("*") && !token.equals("/")) {
+         if (stack.head == null
+                 && !token.equals("+")
+                 && !token.equals("-")
+                 && !token.equals("*")
+                 && !token.equals("/")
+                 && !token.equals("SWAP")
+                 && !token.equals("ROT")
+                 && !token.equals("DUP")
+         ) {
             throw new RuntimeException("Not enough numbers to perform operation in expression: " + pol);
          }
       }

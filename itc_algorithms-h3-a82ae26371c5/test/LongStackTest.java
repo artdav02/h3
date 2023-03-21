@@ -224,6 +224,30 @@ public class LongStackTest {
          LongStack.interpret (s));
    }
 
+   @Test (timeout=1000)
+   public void testInterpretSwap() {
+      String s = "2 5 SWAP -";
+      assertEquals ("expression: " + Aout.toString (s), 3, LongStack.interpret (s));
+   }
+
+   @Test (timeout=1000)
+   public void testInterpretDup() {
+      String s = "3 DUP *";
+      assertEquals ("expression: " + Aout.toString (s), 9, LongStack.interpret (s));
+   }
+
+   @Test (timeout=1000)
+   public void testInterpretRot() {
+      String s = "2 5 9 ROT - +";
+      assertEquals ("expression: " + Aout.toString (s),12 , LongStack.interpret (s));
+   }
+
+   @Test (timeout=1000)
+   public void testInterpretNewCases() {
+      String s = "-3 -5 -7 ROT - SWAP DUP * +";
+      assertEquals ("expression: " + Aout.toString (s),21 , LongStack.interpret (s));
+   }
+
    @Test (expected=RuntimeException.class)
    public void testEmpty1() {
       LongStack.interpret ("\t\t");
